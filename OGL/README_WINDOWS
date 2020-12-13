@@ -1,0 +1,9 @@
+On windows, OpenGL, GLU, and OpenAL are named differently.
+Linux:
+-lGL -lGLU -lopenal
+Windows:
+-lopengl32 -lglu32 -lopenal32
+
+The makefile has been altered to accomodate these changes, but
+if the makefile can't detect you're on windows with $(OS) then
+you may have to implement these changes manually.

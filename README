@@ -1,0 +1,6 @@
+use make (target) to build each of these.
+You will need:
+
+gcc
+libsdl2-dev
+libsdl2-mixer-dev
