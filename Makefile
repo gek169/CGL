@@ -1,7 +1,7 @@
 .ONESHELL:
 CC=gcc
 CFLAGS=-I.
-ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy
+ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse
 SUB_T= OGL S3L TGL
 OPTIMIZATION_LEVEL=-O3 -g
 SDL2_LIBS= -lSDL2 -lSDL2_mixer -lSDL2main
@@ -17,6 +17,8 @@ water:
 	$(CC) water.c -o water -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 demo:
 	$(CC) demo.c -o demo -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
+binbrowse:
+	$(CC) binbrowse.c -o binbrowse -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 sprite:
 	$(CC) spriterendering.c -o sprite -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 trippy:
