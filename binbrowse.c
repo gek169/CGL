@@ -81,20 +81,18 @@ int main(int argc, char** argv)
 	cSurf(WIDTH,HEIGHT);srand(time(NULL));
 	printf("\nfilename = %s\n",filename);
 	for (;shouldQuit < 1;) {
-			clear(0);
+			clear(CLEARCOLOR);
 			if(offsetB > fsize){offsetB = fsize - 1;offsetA = 0;}
-			for(unsigned int i = 0; i < WIDTH * HEIGHT * 3; i++)
+			for(unsigned int i = 0; i < WIDTH * HEIGHT; i++)
 			{
-				unsigned char* datum = (unsigned char*)surf->pixels;
-				unsigned int index = i + ((i+1)/4);
-				if(
-					(i+ offsetA + offsetB > fsize - 1) || 
-					(index >= WIDTH * HEIGHT * 4)
-				) 
-				{
-					i = WIDTH * HEIGHT; break;
-				}
-				datum[index] = filecontents[i+ offsetA + offsetB];
+				unsigned int* datum = (unsigned int*)surf->pixels;
+				uint index = (i + offsetB)*3 + offsetA;
+				uchar* pixpoint = (unsigned char*)(datum + i);
+				if(index + 2 >= fsize) break;
+				pixpoint[0] = filecontents[index+0];
+				pixpoint[1] = filecontents[index+1];
+				pixpoint[2] = filecontents[index+2];
+				//datum[i] = pixel;
 			}
 			ev(EVENT_HANDLER);
 			upd();
