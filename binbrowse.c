@@ -14,9 +14,9 @@ Offset A can be changed by pressing space.
 
 
 
-unsigned int WIDTH = 640, HEIGHT = 480, SCALE = 2, STEPSIZE = 128;
+unsigned int WIDTH = 640, HEIGHT = 480, SCALE = 2, STEPSIZE = 1024;
 unsigned char CLEARCOLOR = (unsigned char)0;
-unsigned int offsetA, offsetB;
+unsigned int offsetA = 0, offsetB = 0;
 
 
 int shouldQuit = 0;
@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	char* filename = argv[1];
 	
 	char* lastarg = argv[2];
-		for(int i = 1; i < argc; i++){
+		for(int i = 1; i < argc && argc > 2; i++){
 			if(!strcmp("-w",lastarg))
 				WIDTH = atoi(argv[i]);
 			if(!strcmp("-h",lastarg))
@@ -65,6 +65,8 @@ int main(int argc, char** argv)
 			lastarg = argv[i];
 		}
 
+	printf("\nAttempting to open filename = %s\n",filename);
+
 	FILE *f = fopen(filename, "rb");
 	fseek(f, 0, SEEK_END);
 	long fsize = ftell(f);
@@ -79,10 +81,10 @@ int main(int argc, char** argv)
 	cWin("C Chads BinBrowser",300,300,WIDTH * SCALE,HEIGHT * SCALE,0);
 	cRend();
 	cSurf(WIDTH,HEIGHT);srand(time(NULL));
-	printf("\nfilename = %s\n",filename);
+	printf("\nOpened filename = %s\n",filename);
 	for (;shouldQuit < 1;) {
 			clear(CLEARCOLOR);
-			if(offsetB > fsize){offsetB = fsize - 1;offsetA = 0;}
+			if(offsetB*3 > fsize){offsetB = (fsize- 1)/3;}
 			for(unsigned int i = 0; i < WIDTH * HEIGHT; i++)
 			{
 				unsigned int* datum = (unsigned int*)surf->pixels;
