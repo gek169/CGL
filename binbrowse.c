@@ -14,7 +14,8 @@ Offset A can be changed by pressing space.
 
 
 
-unsigned int WIDTH = 640, HEIGHT = 480, SCALE = 2;
+unsigned int WIDTH = 640, HEIGHT = 480, SCALE = 2, STEPSIZE = 128;
+unsigned char CLEARCOLOR = (unsigned char)0;
 unsigned int offsetA, offsetB;
 
 
@@ -26,10 +27,10 @@ BEGIN_EVENT_HANDLER
 		case SDL_KEYDOWN:
 			if(E_KEYSYM == SDLK_f) printf("\nRespects!");
 			if(E_KEYSYM == SDLK_SPACE) {offsetA++;offsetA%=3;}
-			if(E_KEYSYM == SDLK_RIGHT) {offsetB++;}
-			if(E_KEYSYM == SDLK_LEFT) {if(offsetB > 0)offsetB--;}
-			if(E_KEYSYM == SDLK_UP) {offsetB+=256;}
-			if(E_KEYSYM == SDLK_DOWN) {if(offsetB > 255) offsetB-=256;}
+			if(E_KEYSYM == SDLK_RIGHT) {offsetB++;printf("\noffsetB = %d",offsetB);}
+			if(E_KEYSYM == SDLK_LEFT) {if(offsetB > 0)offsetB--;printf("\noffsetB = %d",offsetB);}
+			if(E_KEYSYM == SDLK_UP) {offsetB+=STEPSIZE;printf("\noffsetB = %d",offsetB);}
+			if(E_KEYSYM == SDLK_DOWN) {if(offsetB >= STEPSIZE) offsetB-=STEPSIZE;printf("\noffsetB = %d",offsetB);}
 			
 		break;
 END_EVENT_HANDLER
@@ -39,7 +40,7 @@ int main(int argc, char** argv)
 {
 	if(argc < 3){
 		printf("\nUSAGE:");
-		printf("\nbinbrowse FILE -w width -h height -oa offsetA -ob offsetB");
+		printf("\nbinbrowse FILE -w width -h height -oa offsetA -ob offsetB -s scale -c clearshade");
 	}
 	
 	char* filename = argv[1];
@@ -54,8 +55,13 @@ int main(int argc, char** argv)
 				offsetA = atoi(argv[i])%3;
 			if(!strcmp("-ob",lastarg))
 				offsetB = atoi(argv[i]);
+			if(!strcmp("-c",lastarg))
+				CLEARCOLOR = (unsigned char)atoi(argv[i]);
+			if(!strcmp("-step",lastarg))
+				STEPSIZE = atoi(argv[i]);
 			if(!strcmp("-s",lastarg))
 				SCALE = atoi(argv[i]);
+			
 			lastarg = argv[i];
 		}
 
@@ -76,11 +82,19 @@ int main(int argc, char** argv)
 	printf("\nfilename = %s\n",filename);
 	for (;shouldQuit < 1;) {
 			clear(0);
-			for(unsigned int i = 0; i < WIDTH * HEIGHT; i++)
+			if(offsetB > fsize){offsetB = fsize - 1;offsetA = 0;}
+			for(unsigned int i = 0; i < WIDTH * HEIGHT * 3; i++)
 			{
-				char* datum = (char*)surf->pixels;
-				if(i+ offsetA + offsetB >= fsize) {i = WIDTH * HEIGHT; continue;}
-				datum[i] = filecontents[i+ offsetA + offsetB];
+				unsigned char* datum = (unsigned char*)surf->pixels;
+				unsigned int index = i + ((i+1)/4);
+				if(
+					(i+ offsetA + offsetB > fsize - 1) || 
+					(index >= WIDTH * HEIGHT * 4)
+				) 
+				{
+					i = WIDTH * HEIGHT; break;
+				}
+				datum[index] = filecontents[i+ offsetA + offsetB];
 			}
 			ev(EVENT_HANDLER);
 			upd();
