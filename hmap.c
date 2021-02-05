@@ -13,7 +13,7 @@ I don't think your computer is going to struggle.
 */
 #define WIDTH 320
 #define HEIGHT 240
-#define RATIO 4
+#define RATIO 1
 struct{
 	vec3 p;
 	float ang;

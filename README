@@ -4,3 +4,6 @@ You will need:
 gcc
 libsdl2-dev
 libsdl2-mixer-dev
+
+One of the best effects in this repo.
+![Video of effect](peek4.gif)
