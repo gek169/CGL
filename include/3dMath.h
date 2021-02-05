@@ -6,6 +6,7 @@ typedef float f_;
 typedef unsigned int uint;
 
 typedef struct {f_ d[3];} vec3;
+typedef struct {int d[3];} ivec3;
 typedef struct {f_ d[4];} vec4;
 typedef struct {f_ d[16];} mat4;
 mat4 swapRowColumnMajor(mat4 in);
