@@ -90,7 +90,7 @@ unsigned int sampleheight(ivec3 s){
 	uchar result = ((uchar*)heighttex.d)[
    		(
    	 		(s.d[0]) + 
-   	 		(s.d[1]) * WIDTH
+   	 		(s.d[1]) * heighttex.w
    	 	)*4
    	];
    	return (unsigned int)result;
@@ -124,7 +124,7 @@ void Render(){
 
     //# Draw from front to the back (low z coordinate to high z coordinate)
     float dz = 1.0;
-    float z = 1.0;
+    float z = 0.1;
     while(z < distance){
         //# Find line on map. This calculation corresponds to a field of view of 90°
         vec3 pleft = {
@@ -164,7 +164,7 @@ void Render(){
 		}
         //# Go to next line and increase step size when you are far away
         z += dz;
-        //dz += 0.2;
+        dz += 0.05;
     }
 }
 /*
@@ -210,6 +210,8 @@ int main()
 	initspfromstr(&mybackspr,backspr,&mypal);
 	lspr(&heighttex, "D5W.png");
 	lspr(&colortex, "C5W.png");
+	printf("\nHEIGHT WIDTH = %d", heighttex.w);
+	printf("\nCOLOR WIDTH = %d", colortex.w);
 	printf("\nLOADED THE SHIT!!!\n");fflush(stdout);
 	init();//ainit();
 	cWin("Sprite Rendering!",300,300,WIDTH * RATIO,HEIGHT * RATIO,0);
@@ -220,7 +222,7 @@ int main()
 	int ox = 0;
 	for(;!shouldQuit;){
 		ox+=2;
-		//camera.ang+=0.01;
+		camera.ang+=0.01;
 		if(camera.ang > 2 * 3.14159)
 			camera.ang -= 2*3.14159;
 		camera.p.d[0]+= 2;
@@ -229,11 +231,11 @@ int main()
 		if(ox > 1024) ox -= 1024;
 		t += 16.66666/1000;
 		blitback(&mybackspr,sppos[0],sppos[1]);
-		blitback(&colortex,ox,0);
+		
 		m = 20;
-		//hshift(wavy);
+		hshift(wavy);
 		m = 40;
-		//vshift(wavy);
+		vshift(wavy);
 		//TODO Render terrain.
 		Render();
 		
