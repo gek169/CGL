@@ -13,7 +13,7 @@ I don't think your computer is going to struggle.
 */
 #define WIDTH 320
 #define HEIGHT 240
-#define RATIO 1
+#define RATIO 4
 struct{
 	vec3 p;
 	float ang;
@@ -196,7 +196,7 @@ void  Render()
 int main()
 {
 	srand(time(NULL));
-	camera.p = (vec3){.d[0] = 1024,.d[1] = -100,.d[2] = 200};
+	camera.p = (vec3){.d[0] = 1024,.d[1] = -100,.d[2] = 230};
 	camera. ang = 3.14159 * 0.5; 
 	camera. horizon = HEIGHT/2;
 	camera. scale_height = 50;
@@ -223,6 +223,7 @@ int main()
 	for(;!shouldQuit;){
 		ox+=2;
 		camera.ang+=0.01;
+		
 		if(camera.ang > 2 * 3.14159)
 			camera.ang -= 2*3.14159;
 		camera.p.d[0]+= 2;
@@ -230,6 +231,8 @@ int main()
 			camera.p.d[0]-=1024;
 		if(ox > 1024) ox -= 1024;
 		t += 16.66666/1000;
+		camera.p.d[2] = 230 + 100 * sinf(1.4 * t);
+		camera.horizon = HEIGHT/2 + 50 * sinf(1.3 * t);
 		blitback(&mybackspr,sppos[0],sppos[1]);
 		
 		m = 20;
