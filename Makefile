@@ -3,7 +3,7 @@ CC=gcc
 CFLAGS=-I.
 ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper hmap
 SUB_T= OGL S3L TGL
-OPTIMIZATION_LEVEL=-O1 -g
+OPTIMIZATION_LEVEL=-O3 -g
 SDL2_LIBS= -lSDL2 -lSDL2_mixer -lSDL2main
 OTHER_LIBS=
 all: $(ALL_T) $(SUB_T)

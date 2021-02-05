@@ -13,7 +13,7 @@ I don't think your computer is going to struggle.
 */
 #define WIDTH 320
 #define HEIGHT 240
-#define RATIO 4
+#define RATIO 1
 struct{
 	vec3 p;
 	float ang;
@@ -31,19 +31,19 @@ BEGIN_EVENT_HANDLER
 	break;
 	case SDL_QUIT:shouldQuit = 1;break;
 	case SDL_MOUSEMOTION:
-		sppos[0] = E_MOTION.x/4;
-		sppos[1] = E_MOTION.y/4;
+		sppos[0] = E_MOTION.x/RATIO;
+		sppos[1] = E_MOTION.y/RATIO;
 		sppos[0] %= WIDTH;
 		sppos[1] %= HEIGHT;
 	break;
 END_EVENT_HANDLER
 const char* backspr = ""
-"!%%%!)-!%%%%%!---\n"
-"!!%!!)))%%--!----\n"
-"!%%%!)-!%%%%%!---\n"
-"!---FFFFF%------!\n"
-"!%%%!)-!%%%%%!-!!\n"
-"!!%!!)))%%--%-!!!";
+"88888888888888888\n"
+"88888888888888888\n"
+"88888888888888888\n"
+"88888888888888888\n"
+"88888888888888888\n"
+"88888888888888888";
 const char* bubblespr = "\n"
 "       `````   \n"
 "    ```      ``\n"
@@ -120,7 +120,7 @@ void Render(){
     float ybuffer[WIDTH];
     //for i in range(0, screen_width):
     for(int i = 0; i < WIDTH; i++)
-        ybuffer[i] = HEIGHT;
+        ybuffer[i] = HEIGHT-1;
 
     //# Draw from front to the back (low z coordinate to high z coordinate)
     float dz = 1.0;
