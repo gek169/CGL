@@ -81,10 +81,11 @@ ivec3 ftos(ivec3 samppoint){
 }
 
 unsigned int sampleheight(ivec3 s){
-	return 0;
+	/*
 	if(s.d[0] < 0 || s.d[0] > 1024 ||
 	   s.d[1] < 0 || s.d[1] > 1024)
 	   return 0;
+	*/
 	s = ftos(s);
 	uchar result = ((uchar*)heighttex.d)[
    		(
@@ -196,7 +197,7 @@ int main()
 {
 	srand(time(NULL));
 	camera.p = (vec3){.d[0] = 1024,.d[1] = -100,.d[2] = 200};
-	camera. ang = 0; 
+	camera. ang = 3.14159 * 0.5; 
 	camera. horizon = HEIGHT/2;
 	camera. scale_height = 50;
 	camera. distance = 500;
