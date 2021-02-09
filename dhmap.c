@@ -1,19 +1,47 @@
 #define CHAD_API_IMPL
 #define USE_MIXER
 #include "include/api.h"
+#define STB_PERLIN_IMPLEMENTATION
+#include "include/stb_perlin.h"
 #include <time.h>
-/* WAVY DEMO
-This program demonstrats the hshift and vshift routines, which shift
-rows or columns of pixels (respectively) by integer amounts.
+/* DYNAMIC HEIGHTFIELD RENDERING
 
-This allows you to create pretty trippy and very cool effects.
-Hshift is much cheaper than vshift, although considering
-these effects literally ran on the Am*ga (Albeit with paletted color...)
-I don't think your computer is going to struggle.
+Generates a heightfield based on a perlin noise, and a seed provided by commandline arguments.
 */
 #define WIDTH 320
 #define HEIGHT 240
-#define RATIO 1
+#define hmapw 2048
+#define hmaph 2048
+//0 east (+X)
+//1 west (-X)
+//2 south (+Y)
+//3 north (-Y)
+#define SUNDIR 0
+//^ We are marching EASTWARD to look for peaks.
+#define SUN_CLIMB_COEFF 0.3f
+//^ We are looking for objects rising above this line from our height, with this line rising EASTWARD.
+#define RATIO 3
+#define seed 0
+#define nsamps 2
+const float sampletable[4] = {1.0/256.0, 1.5,
+						1.0/64.0, 1.0/8.0};
+const int samplewraps[2] = {8, 32};
+//number of colors in the color table
+#define ncolors 5
+#define shadowshift 2
+const uchar colortable[3*ncolors] = {
+	0x23, 0xC2, 0xDB, //water
+	0xFF, 0xEE, 0x99, //sand
+	0x00, 0xB3, 0x00, //grass
+	0x7A, 0x7A, 0x7A, //Rock
+	0xD1, 0xD1, 0xD1, //Mountaintops
+};
+const uchar transitionpoints[ncolors-1] = {
+	20, //Water ->sand
+	60, //sand  ->grass
+	120, //grass->rock
+	200, //rock ->Mountaintops
+};
 struct{
 	vec3 p;
 	float ang;
@@ -199,8 +227,8 @@ int main()
 	camera.p = (vec3){.d[0] = 1024,.d[1] = -100,.d[2] = 230};
 	camera. ang = 3.14159 * 0.5; 
 	camera. horizon = HEIGHT/2;
-	camera. scale_height = 50;
-	camera. distance = 500;
+	camera. scale_height = 80;
+	camera. distance = 2000;
 	
 	palette mypal;lSPal(&mypal);
 	sprite mysprite;
@@ -208,8 +236,55 @@ int main()
 	
 	initspfromstr(&mysprite,bubblespr,&mypal);
 	initspfromstr(&mybackspr,backspr,&mypal);
-	lspr(&heighttex, "D5W.png");
-	lspr(&colortex, "C5W.png");
+	//lspr(&heighttex, "D5W.png");
+	colortex.w = hmapw;
+	colortex.h = hmaph;
+	colortex.d = malloc(hmapw * hmaph * 4);
+	heighttex.w = hmapw;
+	heighttex.h = hmaph;
+	heighttex.d = malloc(hmapw * hmaph * 4);
+	//Fill in the height map.
+	for(int i = 0; i < heighttex.w; i++)
+	for(int j = 0; j < heighttex.h; j++){
+		float val = 0;
+		for(int k = 0; k < nsamps; k++)
+			val += sampletable[2*k+1] * stb_perlin_noise3_seed(
+				i*sampletable[2*k], j*sampletable[2*k], 0, 
+				samplewraps[k],samplewraps[k],samplewraps[k], 
+				seed
+			);
+		heighttex.d[4*(i+j*heighttex.w)] = (unsigned char)clampf(
+				256 * val,0,255);
+		int color = ncolors-1;
+		for(;color > 0 && transitionpoints[color-1] > heighttex.d[4*(i+j*heighttex.w)]; color--);
+		//TODO add self shadowing
+		colortex.d[4*(i+j*heighttex.w)  ] = colortable[color*3+0];
+		colortex.d[4*(i+j*heighttex.w)+1] = colortable[color*3+1];
+		colortex.d[4*(i+j*heighttex.w)+2] = colortable[color*3+2];
+	}
+	//calculate self-shadowing.
+	const int ISVERT = SUNDIR/2;
+	const int ISNEG = SUNDIR%2;
+	for(int i = 0; i < heighttex.w; i++)
+	for(int j = 0; j < heighttex.h; j++){
+		unsigned char height = (uchar)heighttex.d[4*(i+j*heighttex.w)];
+		int max_searched_pixels = (float)(255 - (int)height) / SUN_CLIMB_COEFF;
+		if(height == 255) continue;
+		unsigned char testheights[max_searched_pixels];
+		for(int b = 0; b < max_searched_pixels; b++)
+			testheights[b] = clampf((float)height + (float)(b+1) * SUN_CLIMB_COEFF,0,255);
+
+		//Written specifically for SUNDIR = 0
+		if(SUNDIR == 0)
+		for(int v = 0; v < max_searched_pixels; v++){
+			if((uchar)heighttex.d[4*( ((i+v+1)%heighttex.w)+j*heighttex.w)] > testheights[v])
+				{
+					colortex.d[4*(i+j*heighttex.w)+0] /= 2;
+					colortex.d[4*(i+j*heighttex.w)+1] /= 2;
+					colortex.d[4*(i+j*heighttex.w)+2] /= 2;
+				}
+		}
+	}
 	printf("\nHEIGHT WIDTH = %d", heighttex.w);
 	printf("\nCOLOR WIDTH = %d", colortex.w);
 	printf("\nLOADED THE SHIT!!!\n");fflush(stdout);
@@ -219,17 +294,16 @@ int main()
 	lSPal(&mypal);
 	printf("\nsurf->w = %d",surf->w);
 	fflush(stdout);
-	int ox = 0;
+	
 	for(;!shouldQuit;){
-		ox+=2;
 		camera.ang+=0.01;
 		
 		if(camera.ang > 2 * 3.14159)
 			camera.ang -= 2*3.14159;
 		camera.p.d[0]+= 2;
-		if(camera.p.d[0] > 1024)
-			camera.p.d[0]-=1024;
-		if(ox > 1024) ox -= 1024;
+		if(camera.p.d[0] > hmapw)
+			camera.p.d[0]-=hmapw;
+		
 		t += 16.66666/1000;
 		camera.p.d[2] = 230 + 100 * sinf(1.4 * t);
 		camera.horizon = HEIGHT/2 + 50 * sinf(1.3 * t);
@@ -249,6 +323,8 @@ int main()
 	}
 	freesp(&mybackspr);
 	freesp(&mysprite);
+	freesp(&heighttex);
+	freesp(&colortex);
 	clean();
 	return 0;
 }
