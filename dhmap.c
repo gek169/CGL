@@ -192,7 +192,7 @@ void Render(){
 		}
         //# Go to next line and increase step size when you are far away
         z += dz;
-        dz += 0.05;
+        //dz += 0.05;
     }
 }
 /*
