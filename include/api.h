@@ -63,7 +63,7 @@ void ainit(){
 #ifdef USE_MP3
 	if(MIX_INIT_MP3 != Mix_Init(MIX_INIT_MP3)){printf("\nCould not initialize mixer");exit(2);}
 #endif
-	if(-1 == Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024)) {printf("\nAudio can't init :(");exit(2);}
+	if(-1 == Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024)) {printf("\nAudio can't init :(");exit(2);}
 }
 void acleanup(){Mix_CloseAudio();}
 
