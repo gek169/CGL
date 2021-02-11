@@ -322,11 +322,12 @@ int main(int argc, char** argv)
 			}
 			glEnable(GL_BLEND);
 			glPopMatrix(); //The view transform.
-			swapGL(); //DUMMY! Compat with TGL!
-			drawText(0,0,
-				"C CHADS RULE!!!!",
-				255,255,255
+			glDrawText(
+				(unsigned char*)"C CHADS RULE!!!!",
+				0,0,0x00FFff00
 				);
+			swapGL(); //DUMMY! Compat with TGL!
+
 			ev(EVENT_HANDLER);
 			if(cursorLocked)
 				captMouse();
