@@ -11,6 +11,7 @@ Generates a heightfield based on a perlin noise, and a seed provided by commandl
 #define WIDTH 320
 #define HEIGHT 240
 #define hmapw 2048
+#define BIAS 3
 #define hmaph 2048
 //0 east (+X)
 //1 west (-X)
@@ -28,7 +29,7 @@ const float sampletable[4] = {1.0/256.0, 1.5,
 const int samplewraps[2] = {8, 32};
 //number of colors in the color table
 #define ncolors 5
-#define shadowshift 2
+#define shadowshift 1
 const uchar colortable[3*ncolors] = {
 	0x23, 0xC2, 0xDB, //water
 	0xFF, 0xEE, 0x99, //sand
@@ -257,7 +258,7 @@ int main()
 				256 * val,0,255);
 		int color = ncolors-1;
 		for(;color > 0 && transitionpoints[color-1] > heighttex.d[4*(i+j*heighttex.w)]; color--);
-		//TODO add self shadowing
+		
 		colortex.d[4*(i+j*heighttex.w)  ] = colortable[color*3+0];
 		colortex.d[4*(i+j*heighttex.w)+1] = colortable[color*3+1];
 		colortex.d[4*(i+j*heighttex.w)+2] = colortable[color*3+2];
@@ -277,11 +278,11 @@ int main()
 		//Written specifically for SUNDIR = 0
 		if(SUNDIR == 0)
 		for(int v = 0; v < max_searched_pixels; v++){
-			if((uchar)heighttex.d[4*( ((i+v+1)%heighttex.w)+j*heighttex.w)] > testheights[v])
+			if((uchar)heighttex.d[4*( ((i+v+1)%heighttex.w)+j*heighttex.w)] > testheights[v] + BIAS)
 				{
-					colortex.d[4*(i+j*heighttex.w)+0] /= 2;
-					colortex.d[4*(i+j*heighttex.w)+1] /= 2;
-					colortex.d[4*(i+j*heighttex.w)+2] /= 2;
+					colortex.d[4*(i+j*heighttex.w)+0] >>= 1;
+					colortex.d[4*(i+j*heighttex.w)+1] >>= 1;
+					colortex.d[4*(i+j*heighttex.w)+2] >>= 1;
 				}
 		}
 	}
