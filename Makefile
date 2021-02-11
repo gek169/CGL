@@ -1,10 +1,11 @@
 .ONESHELL:
 CC=gcc
 CFLAGS=-I.
-ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper hmap dhmap
+ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper dhmap
 SUB_T= OGL S3L TGL lua
 OPTIMIZATION_LEVEL=-O3 -g
 SDL2_LIBS= -lSDL2 -lSDL2_mixer -lSDL2main
+#SDL2_LIBS= -lSDL -lSDL_mixer -lSDLmain
 OTHER_LIBS=
 all: $(ALL_T) $(SUB_T)
 clean:
@@ -16,8 +17,6 @@ clean:
 	cd lua && $(MAKE) clean && cd ..
 water:
 	$(CC) water.c -o water -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
-hmap:
-	$(CC) hmap.c -o hmap -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 dhmap:
 	$(CC) dhmap.c -o dhmap -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 demo:

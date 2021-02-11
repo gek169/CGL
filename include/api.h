@@ -49,7 +49,6 @@ extern uint A_;
 #include<SDL2/SDL_mixer.h>
 void ainit();
 void acleanup();
-
 typedef Mix_Chunk samp;
 typedef Mix_Music track;
 samp* lwav(const char* t);
@@ -103,7 +102,7 @@ typedef struct{
 	void* pixels;
 } api_surface;
 extern api_surface* surf;
-extern SDL_GLContext glcontext;
+
 extern float* dbuff; //depth buffer. used to render sprites and geometry with Z depths.
 extern SDL_Texture* tex;
 extern sprite charsprites[256]; //For loading characters
@@ -113,6 +112,7 @@ void initTileMap(tilemap* t, uint w, uint h, uint sprw, uint sprh);
 void freeTileMap(tilemap* t);
 void init();
 #ifdef USE_API_GL
+extern SDL_GLContext glcontext;
 void cWinGL(const char* name, int x, int y, int w, int h, int resizeable);
 //void swapGL();
 void deleteGL();
@@ -201,7 +201,9 @@ uint B_=2;
 uint A_=3;
 api_surface actualSurf = {0,0,0,0};
 api_surface* surf = NULL;
+#ifdef USE_API_GL
 SDL_GLContext glcontext;
+#endif
 float* dbuff = NULL; //depth buffer. used to render sprites and geometry with Z depths.
 SDL_Texture* tex = NULL;
 sprite charsprites[256]; //For loading characters
@@ -1069,11 +1071,11 @@ void cRend(){
 	ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 }
 void cSurf(int w, int h){
-	if(w < 10)w=10;
-	if(h < 10)h=10;
+	//(w < 10)w=10;
+	//(h < 10)h=10;
 	if(dbuff)free(dbuff);dbuff=NULL;
 	surf = &actualSurf;
-    surf->pixels = malloc(4 * w * h);// = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+    surf->pixels = malloc(4 * w * h);
     surf->w = w;
     surf->h = h;
     surf->pitch = 4*w;
@@ -1091,11 +1093,6 @@ void clear(uchar a){
 	}
 }
 void uTx(){
-	//Old code
-	/*
-	if(tex)SDL_DestroyTexture(tex);
-	tex = SDL_CreateTextureFromSurface(ren, surf);
-	*/
 	if(!tex){
 		//tex = SDL_CreateTextureFromSurface(ren, surf);return;
 		#if SDL_BYTEORDER == SDL_BIGENDIAN
