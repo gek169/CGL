@@ -323,8 +323,8 @@ int main(int argc, char** argv)
 			glEnable(GL_BLEND);
 			glPopMatrix(); //The view transform.
 			glDrawText(
-				(unsigned char*)"C CHADS RULE!!!!",
-				0,0,0x00FFff00
+				(unsigned char*)"\nC\n CHADS\n RULE!!!!",
+				0,30,0x00FFff00
 				);
 			swapGL(); //DUMMY! Compat with TGL!
 
