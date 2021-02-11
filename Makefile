@@ -2,7 +2,7 @@
 CC=gcc
 CFLAGS=-I.
 ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper hmap dhmap
-SUB_T= OGL S3L TGL
+SUB_T= OGL S3L TGL lua
 OPTIMIZATION_LEVEL=-O3 -g
 SDL2_LIBS= -lSDL2 -lSDL2_mixer -lSDL2main
 OTHER_LIBS=
@@ -13,6 +13,7 @@ clean:
 	cd OGL && $(MAKE) clean && cd ..
 	cd S3L && $(MAKE) clean && cd ..
 	cd TGL && $(MAKE) clean && cd ..
+	cd lua && $(MAKE) clean && cd ..
 water:
 	$(CC) water.c -o water -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 hmap:
@@ -47,5 +48,8 @@ OGL:
 	cd OGL && $(MAKE) && cd ..
 S3L:
 	cd S3L && $(MAKE) && cd ..
+lua:
+	cd lua && $(MAKE) && cd ..
 TGL:
 	cd TGL && $(MAKE) && cd ..
+	
