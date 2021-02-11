@@ -322,6 +322,7 @@ int main(int argc, char** argv)
 			}
 			glEnable(GL_BLEND);
 			glPopMatrix(); //The view transform.
+			glTextSize(GL_TEXT_SIZE24x24);
 			glDrawText(
 				(unsigned char*)"\nC\n CHADS\n RULE!!!!",
 				0,30,0x00FFff00
