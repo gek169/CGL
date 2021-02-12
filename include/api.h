@@ -76,8 +76,7 @@ int mplay(track* mus,int loops, int ms){return Mix_FadeInMusic(mus,loops,ms);}
 #endif
 //end of USE_MIXER
 #endif
-#define MAX(x,y) (x>y?x:y)
-#define MIN(x,y) (x<y?x:y)
+
 #define CHAD_API_NEAR 0.0
 typedef struct{
 	uchar* d; //data
