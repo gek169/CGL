@@ -1,6 +1,8 @@
 #define CHAD_API_IMPL
 //#define USE_MIXER
 #include "include/api.h"
+#define CHAD_PHYS_IMPL
+#include "include/chadphys.h"
 #include <time.h>
 #define WIDTH 320
 #define HEIGHT 240
