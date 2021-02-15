@@ -82,10 +82,10 @@ void resolveBodies(phys_body* a, phys_body* b){
 	if(!(b->mass > 0)) {bdisplacefactor = 0; adisplacefactor = 1;}
 	vec3 avel = a->v;
 	vec3 bvel = b->v;
-	vec3 arelvel = a->v - b->v;
-	vec3 brelvel = b->v - a->v;
+	vec3 arelvel = subv3(a->v, b->v);
+	vec3 brelvel = subv3(b->v, a->v);
 	if(a->mass > 0){
-		vec4 displacea = scalev4(adisplacefactor, penvec); //Note: SSE will accelerate a 4-lane multiply better than 3.
+		vec4 displacea = scalev4(-adisplacefactor, penvec); //Note: SSE will accelerate a 4-lane multiply better than 3.
 		a->shape.c.d[0] += displacea.d[0];
 		a->shape.c.d[1] += displacea.d[1];
 		a->shape.c.d[2] += displacea.d[2];
@@ -93,7 +93,7 @@ void resolveBodies(phys_body* a, phys_body* b){
 		a->v = addv3(a->v, scalev3( a->bounciness, downv4(displacea) ) );
 	}
 	if(b->mass > 0){
-		vec4 displaceb = scalev4(-bdisplacefactor, penvec); //The vector returned by collision functions points INTO A! it has to be flipped.
+		vec4 displaceb = scalev4(bdisplacefactor, penvec); //The vector returned by collision functions points INTO B!
 		b->shape.c.d[0] += displaceb.d[0];
 		b->shape.c.d[1] += displaceb.d[1];
 		b->shape.c.d[2] += displaceb.d[2];

@@ -115,7 +115,7 @@ int main()
 			renderAABB(obj1);
 			renderAABB(obj2);
 			vec4 ret = boxvbox(obj1, obj2);
-			if(ret.d[3] == 0)
+			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
 				"Intersecting: False",
 				255,50,20
@@ -136,7 +136,7 @@ int main()
 			renderCircle(obj1);
 			renderCircle(obj2);
 			vec4 ret = spherevsphere(obj1.c, obj2.c);
-			if(ret.d[3] == 0)
+			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
 				"Intersecting: False",
 				255,50,20
@@ -163,7 +163,7 @@ int main()
 				obj2.c.d[0], obj2.c.d[1],
 				0,255,0
 			);
-			if(ret.d[3] == 0)
+			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
 				"Intersecting: False",
 				255,50,20
