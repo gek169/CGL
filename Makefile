@@ -1,7 +1,7 @@
 .ONESHELL:
 CC=gcc
 CFLAGS=-I.
-ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper dhmap phystest
+ALL_T= water demo sprite tilemap wavy lines linemodel triangles c3d palh trippy binbrowse imgdumper dhmap phystest citygen
 SUB_T= OGL S3L lua
 OPTIMIZATION_LEVEL=-O3 -g
 SDL2_LIBS= -lSDL2 -lSDL2_mixer -lSDL2main
@@ -32,6 +32,8 @@ tilemap::
 	$(CC) tilemap.c -o tilemap -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 lines:
 	$(CC) lines.c -o lines -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
+citygen:
+	$(CC) citygen.c -o citygen -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 triangles:
 	$(CC) triangles.c -o triangles -lm $(SDL2_LIBS) -std=c99 $(OPTIMIZATION_LEVEL)
 phystest:
