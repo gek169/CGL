@@ -182,16 +182,6 @@ int main(int argc, char** argv)
 	{
 			objraw omodel; model m = initmodel();
 			omodel = tobj_load(modelName);
-			if(omodel.positions)
-				printf("\nHas %d positions",sb_count(omodel.positions));
-			if(omodel.texcoords)
-				printf("\nHas %d texcoords",sb_count(omodel.texcoords));
-			if(omodel.normals)
-				printf("\nHas %d normals",sb_count(omodel.normals));
-			if(omodel.colors)
-				printf("\nHas %d colors",sb_count(omodel.colors));
-			if(omodel.faces)
-				printf("\nHas %d faces, or %d indices",sb_count(omodel.faces)/3,sb_count(omodel.faces));
 			
 			if(!omodel.positions) {puts("\nERROR! No positions in model. Aborting...\n");} else {
 			m = tobj_tomodel(&omodel);
