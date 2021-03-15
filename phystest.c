@@ -132,6 +132,11 @@ int main()
 					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
 					255,255,0
 				);
+				//Render object 2 pushed back.
+				aabb obj2pushed = obj2;
+				obj2pushed.c.d[0] += ret.d[0];
+				obj2pushed.c.d[1] += ret.d[1];
+				renderAABB(obj2pushed);
 			}
 		}
 		if(mode == 1){
@@ -153,6 +158,10 @@ int main()
 					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
 					255,255,0
 				);
+				aabb obj2pushed = obj2;
+				obj2pushed.c.d[0] += ret.d[0];
+				obj2pushed.c.d[1] += ret.d[1];
+				renderCircle(obj2pushed);
 			}
 		}
 		if(mode==2){
@@ -180,6 +189,11 @@ int main()
 					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
 					255,255,0
 				);
+				//Render object 2 pushed back.
+				aabb obj2pushed = obj2;
+				obj2pushed.c.d[0] += ret.d[0];
+				obj2pushed.c.d[1] += ret.d[1];
+				renderAABB(obj2pushed);
 			}
 		}
 		ev(EVENT_HANDLER);
