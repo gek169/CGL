@@ -116,6 +116,7 @@ int main()
 			renderAABB(obj1);
 			renderAABB(obj2);
 			vec4 ret = boxvbox(obj1, obj2);
+			vec3 ret_norm = scalev3(40.0/ret.d[3], downv4(ret));
 			int b = boxvboxbool(obj1, obj2);
 			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
@@ -129,7 +130,7 @@ int main()
 					);
 				line2d(
 					WIDTH/2, 			HEIGHT/2,
-					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
+					WIDTH/2 + ret_norm.d[0], HEIGHT/2 + ret_norm.d[1],
 					255,255,0
 				);
 				//Render object 2 pushed back.
@@ -143,7 +144,7 @@ int main()
 			renderCircle(obj1);
 			renderCircle(obj2);
 			vec4 ret = spherevsphere(obj1.c, obj2.c);
-			
+			vec3 ret_norm = scalev3(40.0/ret.d[3], downv4(ret));
 			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
 				"Intersecting: False",
@@ -156,7 +157,7 @@ int main()
 					);
 				line2d(
 					WIDTH/2, 			HEIGHT/2,
-					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
+					WIDTH/2 + ret_norm.d[0], HEIGHT/2 + ret_norm.d[1],
 					255,255,0
 				);
 				aabb obj2pushed = obj2;
@@ -169,6 +170,7 @@ int main()
 			renderAABB(obj2);
 			renderCircle(obj1);
 			vec4 ret = spherevaabb(obj1.c, obj2);
+			vec3 ret_norm = scalev3(40.0/ret.d[3], downv4(ret));
 			vec3 closest = closestpointAABB(obj2, downv4(obj1.c));
 			line2d(
 				closest.d[0], closest.d[1],
@@ -187,7 +189,7 @@ int main()
 					);
 				line2d(
 					WIDTH/2, 			HEIGHT/2,
-					WIDTH/2 + ret.d[0], HEIGHT/2 + ret.d[1],
+					WIDTH/2 + ret_norm.d[0], HEIGHT/2 + ret_norm.d[1],
 					255,255,0
 				);
 				//Render object 2 pushed back.
