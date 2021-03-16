@@ -117,14 +117,15 @@ int main()
 			renderAABB(obj1);
 			renderAABB(obj2);
 			vec4 ret = boxvbox(obj1, obj2);
+			int b = boxvboxbool(obj1, obj2);
 			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
-				"Intersecting: False",
+				b?"Error":"Intersecting: False",
 				255,50,20
 				);
 			else{
 				drawText(0,HEIGHT-charsprites['!'].h*4,
-					"Intersecting: True!",
+					b?"Intersecting: True!":"Error",
 					0,255,0
 					);
 				line2d(
@@ -143,6 +144,7 @@ int main()
 			renderCircle(obj1);
 			renderCircle(obj2);
 			vec4 ret = spherevsphere(obj1.c, obj2.c);
+			
 			if(ret.d[3] <= 0)
 				drawText(0,HEIGHT-charsprites['!'].h*4,
 				"Intersecting: False",
